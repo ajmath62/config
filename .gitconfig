@@ -1,0 +1,8 @@
+[user]
+	email = ajmath62@gmail.com
+	name = Aaron Klein
+[push]
+	default = simple
+[core]
+	editor = vi
+	pager = less

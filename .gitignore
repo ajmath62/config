@@ -1,0 +1,8 @@
+# Personal or secure
+.aws/config
+.*history
+
+# Way too big and easily recoverable
+.virtualenvs
+.pyenv
+
