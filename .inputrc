@@ -1,0 +1,12 @@
+#These two enable arrow-key adaptive history search
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
+
+#These two modify ctrl-left/right to jump word by word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+
+set completion-ignore-case on
+
