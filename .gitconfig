@@ -1,8 +1,18 @@
-[user]
-	email = ajmath62@gmail.com
-	name = Aaron Klein
-[push]
-	default = simple
+[alias]
+  df = diff --word-diff=color
+[color]
+  status = always
+[color "status"]
+  added = green
+  changed = red bold
+  untracked = magenta
 [core]
-	editor = vi
-	pager = less
+  editor = vi
+  pager = less
+[diff]
+  wordRegex = [a-zA-Z0-9_-]+|.
+[push]
+  default = simple
+[user]
+  email = ajmath62@gmail.com
+  name = Aaron Klein

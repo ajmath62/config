@@ -11,7 +11,7 @@ function git_merge_old {
     git merge $_OLD_BRANCH
 }
 function git_diff_add {
-  file_list=$(git status | sed -n 's/^.*\x1B\[31m\(both \)\?modified:   \(.*\)\x1B.*$/\2/p')
+  file_list=$(git status | sed -n 's/^.*\x1B\[1;31m\(both \)\?modified:   \(.*\)\x1B.*$/\2/p')
   for file in $file_list; do
     clear && git df -- $file
     while true; do
