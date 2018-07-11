@@ -1,5 +1,6 @@
 # Personal or secure
 .aws/config
+.bash_aliases/projects.sh
 .*history
 
 # Way too big and easily recoverable
