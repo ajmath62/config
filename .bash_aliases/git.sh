@@ -33,6 +33,14 @@ function git_is_child {
   # First argument is child commit, second is parent commit
   git merge-base --is-ancestor $1 $2 && echo "$1 is a child of $2" || echo "$1 is not a child of $2"
 }
+function git_log_hours {
+  if test ${1}; then
+    start_date="--since=${1}"
+  else
+    unset start_date
+  fi
+  git log --author=ajmath62@gmail.com --all --reverse --pretty="%ad: %s" --date="format:%h %d %I:%M%P" ${start_date}
+}
 
 # Git aliases
 # gb = branch, gc = commit, gd = diff, gp = repository, gs = stash
@@ -74,6 +82,8 @@ alias gd-s='git df --stat'  # displays diff but files only
 alias gd-v='git show --word-diff=color '
 alias gd-vl='git show '
 alias gd-vs='git show --stat '
+alias gl-h='git_log_hours '
+alias gl-l='git log '
 alias gp-d='git pull'
 alias gp-f='git fetch'
 alias gp-r='git pull --rebase'
