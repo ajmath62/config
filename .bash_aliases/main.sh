@@ -6,7 +6,6 @@ alias rm='printf "Be sure to use -i.\n"; rm -i' #to train me to not use rm nonin
 alias rmrf='rm -r --interactive=no'  # override the -i above for recursive deletion
 
 # Navigation
-alias ls='ls --color'
 alias la='ls -A'
 alias ll='ls -Alh'
 alias zag='cd ~/zagaran'

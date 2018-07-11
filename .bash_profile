@@ -22,9 +22,10 @@ RED=$(make_color '0;31')
 YELLOW=$(make_color '0;33')
 
 # Bash prompt
-PS1="${GREEN}\u${YELLOW} (\$(git_parse_branch_and_commit))${NOCOLOR}: \w\$ "
-PSFULL="${GREEN}\u${YELLOW} (\$(git_parse_branch_and_commit))${NOCOLOR}: \w\$ "
-PSFAST="${GREEN}\u${NOCOLOR}: \w\$ "
+# The [] need to be around the colors so that the bash prompt doesn't count their length, which would cause wrapping issues.
+PS1="\[${GREEN}\]\u\[${YELLOW}\] (\$(git_parse_branch_and_commit))\[${NOCOLOR}\]: \w\$ "
+PSFULL=$PSFULL
+PSFAST="\[${GREEN}\]\u[\[${NOCOLOR}\]: \w\$\] "
 
 # PyEnv and RbEnv
 if [[ $PATH != *'/home/aaron/.pyenv/bin'* ]]; then
