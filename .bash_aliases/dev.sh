@@ -1,26 +1,37 @@
-# Python and Pip
-alias py=python
-alias ipy=ipython
-alias del-pyc='find . -type f -name "*.pyc" -delete -print' #deletes all the .pyc files in current directory tree
-alias pc-c='pip-compile '
-alias pc-s='pip-sync '
-alias pc-u='pip-compile --upgrade '
+# Python (p)
+alias pa='python app.py'
+alias pc=pip-compile
+alias pcs=pip-sync
+alias pcu='pip-compile --upgrade '
+alias pf='pip list'
+alias pi='pip install '
+alias pii='pip install --upgrade pip'
+alias pir='pip install -r requirements.txt'
+alias piu='pip install --upgrade '
 alias pl='pylint *'
-alias pp-i='pip install '
-alias pp-p='pip install --upgrade pip'
-alias pp-r='pip install -r requirements.txt '
-alias pp-u='pip install --upgrade '
+alias pp=ipython
+alias pr!='pip uninstall '
+alias prf!='pip uninstall $(pip freeze)'
+alias pv='python -V'
+alias pw='pip show '
+alias py=python
 
-# Django
-alias pmp='python manage.py'
-alias pmp-w='python -W ignore manage.py'
-alias pap='python app.py'
-alias psp='pmp shell_plus --print-sql --quiet-load '
-alias prp='pmp runserver_plus'
-alias pdk='pmp addstatictoken '
-alias tst='pmp test --keepdb --exe --verbosity=3 --with-id '
-alias tst-n='pmp test --keepdb --verbosity=3 '  # without nose
-alias tst!='tst --failed '
+# Django (pd)
+alias pdk='python manage.py addstatictoken '
+alias pdm='python manage.py migrate '
+alias pdmm='python manage.py makemigrations '
+alias pdmq='python manage.py sqlmigrate '
+alias pdms='python manage.py showmigrations '
+alias pdn='python manage.py test --keepdb --exe --verbosity=3 --with-id '  # with nose
+alias pdnf='pdn --failed'
+alias pdp='python manage.py '
+alias pdq='python manage.py dbshell'
+alias pdr='python manage.py runserver_plus'
+alias pdrm='python manage.py runserver'
+alias pds='python manage.py shell_plus --print-sql --quiet-load'
+alias pdsm='python manage.py shell_plus'
+alias pdt='python manage.py test --keepdb --verbosity=3 '  # without nose
+alias pdw='python -W ignore manage.py '
 
 # JavaScript (e)
 function es_lint {
