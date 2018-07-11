@@ -5,11 +5,11 @@ alias del-pyc='find . -type f -name "*.pyc" -delete -print' #deletes all the .py
 alias pc-c='pip-compile '
 alias pc-s='pip-sync '
 alias pc-u='pip-compile --upgrade '
+alias pl='pylint *'
 alias pp-i='pip install '
 alias pp-p='pip install --upgrade pip'
 alias pp-r='pip install -r requirements.txt '
 alias pp-u='pip install --upgrade '
-
 
 # Django
 alias pmp='python manage.py'
@@ -17,9 +17,18 @@ alias pmp-w='python -W ignore manage.py'
 alias pap='python app.py'
 alias psp='pmp shell_plus --print-sql --quiet-load '
 alias prp='pmp runserver_plus'
+alias pdk='pmp addstatictoken '
 alias tst='pmp test --keepdb --exe --verbosity=3 --with-id '
+alias tst-n='pmp test --keepdb --verbosity=3 '  # without nose
 alias tst!='tst --failed '
 
+# JavaScript (e)
+function es_lint {
+  ./node_modules/.bin/eslint $@ && (echo -e "\n${GREENBOLD}  No errors${NOCOLOR}\n")
+}
+alias el=es_lint
+alias et='rake jasmine'
+alias etb='rake jasmine:ci'
 
 # PyCharm
 alias pch='/home/aaron/applications/pycharm-2017.3.4/bin/pycharm.sh'
@@ -88,3 +97,19 @@ function new_component {
 
 # AWS
 alias eb-ssh='echo "source /opt/python/current/env && cd /opt/python/current/app && python manage.py shell_plus --print-sql --quiet-load"; eb ssh '
+alias eb-deploy='eb deploy'
+
+# Specific tasks
+function mongo {
+  mongod --dbpath ${1} --port 27017 --smallfiles --nssize 1 --noprealloc --storageEngine mmapv1 --journal
+}
+function mongo_bg {
+  mongod --dbpath ${1} --port 27017 --smallfiles --logpath ${1}/ajk_db/log.txt --logappend --nssize 1 --noprealloc --storageEngine mmapv1 --journal 1> /dev/null
+}
+alias bun='sudo rabbitmq-server'  # Rabbit MQ
+alias bund='sudo rabbitmq-server -detached'
+alias cry='celery worker -A gecko --loglevel=DEBUG -B -Q default,crush,udefutures'  # Celery
+alias pgs='sudo -u postgres psql'  # PostgreSQL
+alias xbar='crossbar start'  # Crossbar
+alias om=mongo  # MongoDB
+alias omb=mongo_bg
