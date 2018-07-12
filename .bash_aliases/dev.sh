@@ -62,36 +62,46 @@ function po {
   done;
 }
 
-# Virtual environment
+# Environments (v)
 function _curr {
+  # Current directory name
   pwd | rev | cut -f1 -d/ | rev
 }
-function venv {
-  # Activate virtual environment
-  if [ -z $1 ]; then  # -z: has zero length
-    venv_name=$(_curr);
+function _curr_default {
+  # Return the first argument if nonempty, else return the current directory name
+  if test -z ${1}; then
+    echo $(_curr)
   else
-    venv_name=$1;
-  fi
-  if [ -d ~/.virtualenvs/$venv_name/ ]; then  # -d: is a directory
-    source ~/.virtualenvs/$venv_name/bin/activate
-  else
-    # No directory found, so list all the available virtual envs
-    echo 'No virtual environment found. Please specify one of the following:'
-    ls -d ~/.virtualenvs/*/ | rev | cut -f2 -d'/' | rev; return 1;
+    echo ${1}
   fi
 }
-function venv-new {
+function venv_new {
   # Create new virtual environment
-  if [ -z $1 ]; then
-    venv_name=$(_curr)
-  else
-    venv_name=$1
-  fi
-  virtualenv -p python ~/.virtualenvs/$venv_name
+  # Syntax is $ venv-new <name> <python-version>. Both arguments are optional.
+  # If <name> is not specified, the current directory name will be used.
+  # If <python-version> is not specified, the current pyenv python will be used.
+  # To specify a python version but use the default name, pass '' as <name>.
+  venv_name=$(_curr_default ${1})
+  pyenv virtualenv ${2} ${venv_name}
 }
-alias sv='venv '
-alias dv='deactivate'
+function venv_on {
+  # Activate virtual environment
+  # Syntax is the same as venv_new
+  venv_name=$(_curr_default ${1})
+  pyenv activate ${venv_name}
+}
+alias va=venv_on
+alias vb='pyenv deactivate'
+alias vn=venv_new
+alias vr!='pyenv uninstall '
+
+# PyEnv (vp)
+alias vpc='pyenv version'
+alias vpg='pyenv global '
+alias vph='pyenv shell '
+alias vpi='pyenv install '
+alias vpl='pyenv local '
+alias vps='pyenv versions'
 
 # Check for non-ASCII characters
 alias ascii='~/ascii '

@@ -28,9 +28,13 @@ PSFULL=$PSFULL
 PSFAST="\[${GREEN}\]\u[\[${NOCOLOR}\]: \w\$\] "
 
 # PyEnv and RbEnv
-if [[ $PATH != *'/home/aaron/.pyenv/bin'* ]]; then
-    export PATH='/home/aaron/.pyenv/shims:/home/aaron/.pyenv/bin:$PATH';
-    export PATH='/home/aaron/.rbenv/shims:/home/aaron/.rbenv/bin:$PATH';
+if test -z $PYENV_LOADED; then
+#  export PATH='/home/aaron/.pyenv/shims:/home/aaron/.pyenv/bin:$PATH';
+  # export PATH='/home/aaron/.rbenv/shims:/home/aaron/.rbenv/bin:$PATH';
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+  export PYENV_VIRTUALENV_DISABLE_PROMPT=1  # warning given on activation
+  PYENV_LOADED=1
 fi
 
 # Load aliases
