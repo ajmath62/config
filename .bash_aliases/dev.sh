@@ -100,7 +100,8 @@ alias vpc='pyenv version'
 alias vpg='pyenv global '
 alias vph='pyenv shell '
 alias vpi='pyenv install '
-alias vpl='pyenv local '
+alias vpl='pyenv install --list'
+alias vpo='pyenv local '
 alias vps='pyenv versions'
 
 # Check for non-ASCII characters

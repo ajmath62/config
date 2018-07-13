@@ -33,7 +33,22 @@ function ror {
 }
 
 # Meta
-alias p='vi ~/.bash_profile; source ~/.bash_profile' #edit user profile
+function edit_profile {
+  if test -z ${1}; then
+    # No argument -> edit bash_profile
+    gedit ~/.bash_profile
+  elif test -f ~/.bash_aliases/${1}.sh; then
+    # Argument -> edit that alias file
+    gedit ~/.bash_aliases/${1}.sh
+  else
+    echo -e 'No such alias file found.\nAvailable alias files:'
+    for file in $(ls ~/.bash_aliases); do
+      echo ${file} | sed s/.sh//
+    done
+  fi
+}
+alias bb=edit_profile
+alias bbs='source ~/.bash_profile'
 
 # Searching
 alias grop='grep -in'  # not case-sensitive, display line number
