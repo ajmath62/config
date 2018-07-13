@@ -46,11 +46,11 @@ alias pch='/home/aaron/applications/pycharm-2017.3.4/bin/pycharm.sh'
 function ev {
   lastarg=''
   for arg; do  # implied 'in $@'
-    lastarg=$arg
+    lastarg=${arg}
   done
   for arg; do
-    if [ $arg != $lastarg ]; then
-      eval $arg $lastarg || break  # if this fails, exit
+    if [[ ${arg} != ${lastarg} ]]; then  # [[...]] handles the case where $arg or $lastarg has spaces
+      eval ${arg} ${lastarg} || break  # if this fails, exit
     fi
   done
 }
