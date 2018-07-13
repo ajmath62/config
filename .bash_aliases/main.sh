@@ -58,3 +58,8 @@ alias ogu='og -u '
 alias ogpy='og -G .py$'
 alias ogpy-mig='ogpy --ignore=*/migrations/* '
 alias ogv='og --ignore=vendor --ignore=lib '
+
+# Cowsay
+function random_cow {
+  la /usr/share/cowsay/cows | shuf -n1
+}

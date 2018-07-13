@@ -102,7 +102,8 @@ alias vph='pyenv shell '
 alias vpi='pyenv install '
 alias vpl='pyenv install --list'
 alias vpo='pyenv local '
-alias vps='pyenv versions'
+alias vps='pyenv versions | grep -v /envs/'  # hide duplicates
+alias vpsa='pyenv versions'
 
 # Check for non-ASCII characters
 alias ascii='~/ascii '
