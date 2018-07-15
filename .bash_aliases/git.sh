@@ -42,59 +42,71 @@ function git_log_hours {
   git log --author=ajmath62@gmail.com --all --reverse --pretty="%ad: %s" --date="format:%h %d %I:%M%P" ${start_date}
 }
 
-# Git aliases
-# gb = branch, gc = commit, gd = diff, gp = repository, gs = stash
-alias gb-c='git_store_old && git checkout'
-alias gb-cd='gb-c development'
-alias gb-cm='gb-c master'
-alias gb-co='git_checkout_old'
-alias gb-cp='gb-c production'
-alias gb-cs='gb-c stable'
-alias gb-l='git branch'
-alias gb-la='git branch -a'
-alias gb-n='ev "git checkout -b" "git push -u origin"'
-alias gb-rr!='git branch -d'
-alias gc-a='git add'
-alias gc-am='git add */migrations 2> /dev/null || git add */*/migrations'  # add grandchild or great-grandchild migration directories
-alias gc-c='git commit '
-alias gc-ca='git commit --amend '
-alias gc-h='git reset HEAD'
-alias gc-hh='git checkout -- '
-alias gc-m='git merge'
-alias gc-md='git merge development'
-alias gc-mm='git merge master'
-alias gc-mo='git_merge_old'
-alias gc-p='git add --patch'  # git add by chunks of file
-alias gc-q='git_diff_add'
-alias gc-r='git rebase '
-alias gc-rc='git rebase --continue '
-alias gc-rm='git rebase master '
-alias gc-rr!='git rm'
-alias gd-c='git df --cached'  # displays diff of staged changes
-alias gd-d='git df '  # word diff
-alias gd-f='git status | cowsay -n -f $(random_cow)'
-alias gd-fc='git status'  # no cow
-alias gd-fcu='git status -uno'  # hide untracked files
-alias gd-fu='git status -uno | cowsay -n -f $(random_cow)'
-alias gd-i=git_is_child
-alias gd-l='git diff '  # line diff
-alias gd-o='gd-d master origin/master'
-alias gd-os='gd-s master origin/master'
-alias gd-s='git df --stat'  # displays diff but files only
-alias gd-v='git show --word-diff=color '
-alias gd-vl='git show '
-alias gd-vs='git show --stat '
-alias gl-h='git_log_hours '
-alias gl-l='git log '
-alias gp-d='git pull'
-alias gp-f='git fetch '
-alias gp-fp='git fetch -p '
-alias gp-r='git pull --rebase'
-alias gp-u='git push'
-alias gs-l='git stash list'
-alias gs-o='git stash pop'
-alias gs-p='git stash save --patch'  # git stash by chunks of file
-alias gs-rr!='git stash drop'
-alias gs-s='git stash save'
-alias gs-w='git stash show -u'  # displays diff of stash
-alias gs-ws='git stash show '
+# Git aliases (g)
+# Branches (gb)
+alias gbc='git_store_old && git checkout'
+alias gbcd='gb-c development'
+alias gbcm='gb-c master'
+alias gbco=git_checkout_old
+alias gbcp='gb-c production'
+alias gbcs='gb-c stable'
+alias gbl='git branch --list '
+alias gbla='git branch --all'
+alias gbn='bv "git checkout -b" "git push -u origin"'
+alias gbno='git checkout -b '
+alias gbr!='git branch -d'
+# Committing (gc)
+alias gca='git add'
+alias gcam='git add */migrations 2> /dev/null || git add */*/migrations'  # add grandchild or great-grandchild migration directories
+alias gcb='git rebase '
+alias gcbc='git rebase --continue '
+alias gcbm='git rebase master '
+alias gcc='git commit '
+alias gcca='git commit --amend '
+alias gch='git reset HEAD'
+alias gch!='git checkout -- '
+alias gcm='git merge'
+alias gcmd='git merge development'
+alias gcmm='git merge master'
+alias gcmo=git_merge_old
+alias gcp='git add --patch'  # git add by chunks of file
+alias gcq=git_diff_add
+alias gcr!='git rm'
+# Diff (gd)
+alias gdc='git df --cached'  # displays diff of staged changes
+alias gdcs='git df --cached --stat'
+alias gdd='git df '  # word diff
+alias gdf='git status | cowsay -n -f $(random_cow)'
+alias gdfc='git status'  # no cow
+alias gdfcu='git status -uno'  # hide untracked files
+alias gdfs='git status | cowsay -W80 -f $(random_cow)'
+alias gdfu='git status -uno | cowsay -n -f $(random_cow)'
+alias gdi=git_is_child
+alias gdl='git diff '  # line diff
+alias gdlc='git diff --cached'
+alias gdo='gd-d master origin/master'
+alias gdos='gd-s master origin/master'
+alias gds='git df --stat'  # displays diff but files only
+alias gdv='git show --word-diff=color '
+alias gdvl='git show '
+alias gdvs='git show --stat '
+# Log (gl)
+alias glh=git_log_hours 
+alias gll='git log '
+alias glp='git log --patch '
+# Repository (gp)
+alias gpd='git pull'
+alias gpf='git fetch '
+alias gpfp='git fetch --prune '
+alias gpl='git remote --verbose'
+alias gpo='git remote add '
+alias gpr='git pull --rebase'
+alias gpu='git push'
+# Stash (gs)
+alias gsl='git stash list'
+alias gso='git stash pop'
+alias gsp='git stash save --patch'  # git stash by chunks of file
+alias gsr!='git stash drop'
+alias gss='git stash save'
+alias gsw='git stash show -u'  # displays diff of stash
+alias gsws='git stash show '

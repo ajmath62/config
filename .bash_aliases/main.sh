@@ -1,28 +1,45 @@
 # Timesheet
 alias log='vi ajk.timesheet'
 
-# File deletion
-alias rm='printf "Be sure to use -i.\n"; rm -i' #to train me to not use rm noninteractively in other environments
-alias rmrf='rm -r --interactive=no'  # override the -i above for recursive deletion
+# Common
+alias be=echo
+alias bs=sudo
+alias bs!='sudo su'
+alias bt=type
+alias bw=which
+alias bwp='which python'
+
+# File manipulation
+alias bk=ln
+alias bm=mv
+alias br!='rm -i'
+alias brr!='rm -ri'
+alias brr!!='rm -r'  # non-interactive
 
 # Navigation
-alias la='ls -A'
-alias ll='ls -Alh'
-alias zag='cd ~/zagaran'
+alias bc=cd
+alias bch='cd ~'
+alias bcu='cd ..'
+alias bcz='cd ~/zagaran'
+alias bl='ls '
+alias bla='ls -A '
+alias bll='ls -Alh '
+
+# Installing (ba)
+alias baa='sudo apt-get autoremove'
+alias bai='sudo apt-get install '
+alias bar!='sudo apt-get remove '
+alias baud='sudo apt-get update'
+alias baug='sudo apt-get upgrade'
+alias bau='baud && baug'
 
 # Tasks
-alias n=nano
-alias v=vim
-alias vls='/usr/share/vim/vim74/macros/less.sh'  #blah | vls is better than blah | less
 alias mem='ps aux | head -1; ps aux | grep [p]ython' #memory usage etc. of all running python processes
 alias cron='crontab -e' #editor for crontabs for the current user
 alias scron='sudo crontab -e' #editor for crontabs for the super user
 alias gc='google-chrome --force-device-scale-factor=1'
 alias fx='firefox -foreground '
 alias fx-s='fx -search '
-
-# Weird thing Eli told me to do
-alias sudo='sudo '
 
 # Database backup and restoration
 function bup {
@@ -32,13 +49,10 @@ function ror {
     cp $1.backup $1
 }
 
-# Meta
-function edit_profile {
-  if test -z ${1}; then
-    # No argument -> edit bash_profile
-    gedit ~/.bash_profile
-  elif test -f ~/.bash_aliases/${1}.sh; then
-    # Argument -> edit that alias file
+# Meta (f)
+function edit_aliases {
+  if test -f ~/.bash_aliases/${1}.sh; then
+    # Argument that is an actual file -> edit that alias file
     gedit ~/.bash_aliases/${1}.sh
   else
     echo -e 'No such alias file found.\nAvailable alias files:'
@@ -47,19 +61,37 @@ function edit_profile {
     done
   fi
 }
-alias bb=edit_profile
-alias bbs='source ~/.bash_profile'
+alias fa=edit_aliases
+alias fe='gedit ~/.bash_profile '
+alias fs='source ~/.bash_profile'
+alias fu='unalias -a'
+alias fur='unalias -a && source ~/.bash_profile'
 
-# Searching
-alias grop='grep -in'  # not case-sensitive, display line number
-alias ag='ag --ignore=node_modules --ignore=doctor/data/*st.py --ignore=*.min.js* --ignore=*.cache --ignore=development.log'
-alias og='ag --pager="less -FRXm" --column '
-alias ogu='og -u '
-alias ogpy='og -G .py$'
-alias ogpy-mig='ogpy --ignore=*/migrations/* '
-alias ogv='og --ignore=vendor --ignore=lib '
+# Searching (s)
+alias sa='ag --ignore=node_modules --ignore=doctor/data/*st.py --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column'
+alias sap='sa -G .py$'
+alias sapm='sap --ignore=*/migrations/* '
+alias sar=ag
+alias sau='sa -u '  # all
+alias sav='sa --ignore=vendor --ignore=lib '
+alias sg='grep -in'  # not case-sensitive, display line number
 
 # Cowsay
 function random_cow {
-  la /usr/share/cowsay/cows | shuf -n1
+  ls /usr/share/cowsay/cows | shuf -n1
 }
+
+# Other (o)
+alias oo=xdg-open
+alias or=ruby
+alias orr=rails
+alias os=sqlite
+alias ov=vim
+
+# Pipes (oi)
+alias oic=cowsay
+alias oicr='cowsay -f $(random_cow)'
+alias oil=less
+alias oit=tail
+alias oith=head
+alias oiv=/usr/share/vim/vim80/macros/less.sh  # vim version of less
