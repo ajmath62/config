@@ -1,15 +1,4 @@
 # Git functions
-function git_store_old {
-    _OLD_BRANCH=$(git_parse_branch)
-}
-function git_checkout_old {
-    temp=$_OLD_BRANCH
-    git_store_old
-    git checkout $temp
-}
-function git_merge_old {
-    git merge $_OLD_BRANCH
-}
 function git_diff_add {
   changed_color='1;31' # git config color.status.changed; in this case, bold red
   file_list=$(git status | sed -n "s/^.*\x1B\[${changed_color}m\(both \)\?modified:   \(.*\)\x1B.*$/\2/p")
@@ -33,6 +22,10 @@ function git_is_child {
   # First argument is child commit, second is parent commit
   git merge-base --is-ancestor $1 $2 && echo "$1 is a child of $2" || echo "$1 is not a child of $2"
 }
+function git_last_branch {
+  # Get the name of the branch that the last git checkout operation started at
+  git log --walk-reflogs --pretty='%gs' | sed -n 's/^checkout: moving from \(.*\?\) to .*\?$/\1/p' -n | head -n 1
+}
 function git_log_hours {
   if test ${1}; then
     start_date="--since=${1}"
@@ -44,12 +37,12 @@ function git_log_hours {
 
 # Git aliases (g)
 # Branches (gb)
-alias gbc='git_store_old && git checkout'
-alias gbcd='gb-c development'
-alias gbcm='gb-c master'
-alias gbco=git_checkout_old
-alias gbcp='gb-c production'
-alias gbcs='gb-c stable'
+alias gbc='git checkout '
+alias gbcd='gbc development'
+alias gbcm='gbc master'
+alias gbco='gbc $(git_last_branch)'
+alias gbcp='gbc production'
+alias gbcs='gbc stable'
 alias gbl='git branch --list '
 alias gbla='git branch --all'
 alias gbn='bv "git checkout -b" "git push -u origin"'
@@ -68,7 +61,7 @@ alias gch!='git checkout -- '
 alias gcm='git merge'
 alias gcmd='git merge development'
 alias gcmm='git merge master'
-alias gcmo=git_merge_old
+alias gcmo='git merge $(git_last_branch)'
 alias gcp='git add --patch'  # git add by chunks of file
 alias gcq=git_diff_add
 alias gcr!='git rm'
@@ -91,9 +84,12 @@ alias gdv='git show --word-diff=color '
 alias gdvl='git show '
 alias gdvs='git show --stat '
 # File operations (gf)
+alias gfc='git ls-files | wc '
 alias gfm='git mv '
+alias gfl='git ls-files | less -FRXm '
 alias gfr='git rm '
 # Log (gl)
+alias glf='git reflog '
 alias glh=git_log_hours 
 alias gll='git log '
 alias glp='git log --patch '
