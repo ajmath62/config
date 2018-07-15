@@ -37,11 +37,9 @@ PSFAST="\[${GREEN}\]\u[\[${NOCOLOR}\]: \w\$\] "
 
 # PyEnv and RbEnv
 if test -z $PYENV_LOADED; then
-  export PATH="/home/aaron/.pyenv/shims:/home/aaron/.pyenv/bin:${PATH}"
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-  export PATH="/home/aaron/.rbenv/shims:/home/aaron/.rbenv/bin:${PATH}"
-  eval "$(rbenv init -)"
+  eval "$(~/.pyenv/bin/pyenv init -)"
+  eval "$(~/.pyenv/bin/pyenv virtualenv-init -)"
+  eval "$(~/.rbenv/bin/rbenv init -)"
   export PYENV_VIRTUALENV_DISABLE_PROMPT=1  # warning given on activation
   PYENV_LOADED=1
 fi
