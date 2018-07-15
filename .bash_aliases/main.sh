@@ -56,7 +56,7 @@ function edit_aliases {
     gedit ~/.bash_aliases/${1}.sh
   else
     echo -e 'No such alias file found.\nAvailable alias files:'
-    for file in $(ls ~/.bash_aliases); do
+    for file in $(ls -A ~/.bash_aliases); do
       echo ${file} | sed s/.sh//
     done
   fi

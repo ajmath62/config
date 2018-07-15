@@ -1,0 +1,69 @@
+b: bash
+ba: apt
+bc: cd
+be: print
+bk: link
+bl: list
+bm: move file
+br: delete
+bs: sudo
+bt: type
+bv: run multiple functions on a single argument
+bw: which
+
+e: javascript
+el: lint
+et: test
+
+f: meta
+fa: edit aliases
+fe: edit profile
+fs: source
+fu: unalias
+
+g: git
+gb: branch
+gc: commit
+gd: diff
+gf: file operations
+gl: log
+gp: remote
+gs: stash
+
+j: projects
+
+o: other
+oa: ascii
+oc: pycharm
+oi: pipes
+om: mongodb
+oo: open file
+op: postgresql
+or: ruby
+os: sqlite
+ov: vim
+
+p: python
+pa: app.py
+pc: pip-tools
+pd: django
+pf: show installs
+pi: install
+pl: lint
+pp: ipython
+pr: uninstall
+pv: version
+pw: show library
+py: run
+
+s: search
+sa: silversearcher
+sg: grep
+
+v: environments
+ve: enter
+vn: create
+vp: pyenv
+vr: delete
+vx: exit
+vy: rbenv

@@ -92,10 +92,10 @@ function venv_on {
   venv_name=$(_curr_default ${1})
   pyenv activate ${venv_name}
 }
-alias va=venv_on
-alias vb='pyenv deactivate'
+alias ve=venv_on
 alias vn=venv_new
 alias vr!='pyenv uninstall '
+alias vx='pyenv deactivate'
 
 # PyEnv (vp)
 alias vpc='pyenv version'

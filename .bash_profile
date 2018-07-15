@@ -47,6 +47,6 @@ if test -z $PYENV_LOADED; then
 fi
 
 # Load aliases
-if test -f ~/.bash_aliases/init.sh; then
-   source ~/.bash_aliases/init.sh
+if test -f ~/.bash_aliases/.init.sh; then
+   source ~/.bash_aliases/.init.sh
 fi

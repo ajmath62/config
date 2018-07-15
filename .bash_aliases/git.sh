@@ -90,6 +90,9 @@ alias gds='git df --stat'  # displays diff but files only
 alias gdv='git show --word-diff=color '
 alias gdvl='git show '
 alias gdvs='git show --stat '
+# File operations (gf)
+alias gfm='git mv '
+alias gfr='git rm '
 # Log (gl)
 alias glh=git_log_hours 
 alias gll='git log '
