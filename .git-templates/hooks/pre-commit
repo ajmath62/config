@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+""" Check that the files to be committed are acceptable """
+import os
+
+
+def check_dash_m():
+    """ Check that the -m argument was not used """
+    if os.getenv('GIT_EDITOR', None) == ':':
+        print('The -m argument to git commit was used. Please enter your commit message in an editor.')
+        exit(1)
+
+
+if __name__ == '__main__':
+    check_dash_m()

@@ -11,6 +11,8 @@
   pager = less
 [diff]
   wordRegex = [a-zA-Z0-9_-]+|.
+[init]
+	templatedir = /home/aaron/.git-templates
 [push]
   default = simple
 [user]
