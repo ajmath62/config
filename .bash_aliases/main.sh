@@ -1,6 +1,3 @@
-# Timesheet
-alias log='vi ajk.timesheet'
-
 # Common
 alias be=echo
 alias bs=sudo
@@ -21,9 +18,9 @@ alias bc=cd
 alias bch='cd ~'
 alias bcu='cd ..'
 alias bcz='cd ~/zagaran'
-alias bl='ls '
-alias bla='ls -A '
-alias bll='ls -Alh '
+alias bl='ls --color '
+alias bla='ls --color -A '
+alias bll='ls --color -Alh '
 
 # Installing (ba)
 alias baa='sudo apt-get autoremove'

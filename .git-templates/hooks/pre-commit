@@ -1,14 +1,27 @@
 #!/usr/bin/env python
 """ Check that the files to be committed are acceptable """
 import os
+import subprocess
 
 
 def check_dash_m():
     """ Check that the -m argument was not used """
     if os.getenv('GIT_EDITOR', None) == ':':
-        print('The -m argument to git commit was used. Please enter your commit message in an editor.')
+        print('The -m argument to git commit was used. Please enter your commit message '
+              'in an editor.')
+        exit(1)
+
+
+def check_log_file():
+    """ Check that the timesheet has not been committed """
+    files = subprocess.run(['git', 'diff', '--cached', '--name-only', '-z'], check=True,
+                           stdout=subprocess.PIPE).stdout
+    file_list = files.split(b'\x00')
+    if b'timesheet.txt' in file_list:
+        print('One of the files being committed is timesheet.txt. Don\'t commit your timesheet!')
         exit(1)
 
 
 if __name__ == '__main__':
     check_dash_m()
+    check_log_file()

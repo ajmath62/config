@@ -13,7 +13,8 @@ def check_length():
         file_length = sum(len(line.strip()) for line in fn if not line.startswith('#'))
         
     # If this length is too short, reject the commit message
-    if file_length < 10:
+    # If the file length is 0, git will abort the commit, so don't bother to reject
+    if file_length > 0 and file_length < 10:
         print('Commit message is too short. Please enter a longer commit message.')
         exit(1)
 

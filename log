@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+""" Log hours for today """
+import argparse
+import datetime
+from pathlib import Path
+import subprocess
+
+
+parser = argparse.ArgumentParser(description='Log hours for a project')
+parser.add_argument('filename', default='timesheet.txt', help='the timesheet file location',
+                    nargs='?', type=str)
+parser.add_argument('-e', '--edit', action='store', const='vi', dest='editor',
+                    help='edit the timesheet file manually', nargs='?', type=str)
+
+
+def log_hours():
+    """ Log hours via user input """
+    today = datetime.date.today()
+    print(f'Logging hours for {today}.')
+    
+    # Get hours (must be a positive number)
+    hours = None
+    while hours is None:
+        raw_hours = input('How many hours did you work? ')
+        try:
+            hours = float(raw_hours)
+        except ValueError:
+            print('Please enter a number.')
+            continue
+        
+        if hours < 0:
+            hours = None
+            print('Please enter a positive number.')
+    
+    if hours.is_integer():
+        hours = int(hours)
+    desc = input('What is a description of your work today? ')
+    
+    # Write the date, hours and description to the file
+    # If the file doesn't yet exist, add a header
+    file = Path(args.filename)
+    add_header = not file.exists()
+    with file.open('a') as fn:
+        if add_header:
+            fn.write('Date\tHours\tDescription\n')
+        fn.write(f'{today}:\t{hours}\t{desc}\n')
+
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    if args.editor:
+        subprocess.run([args.editor, args.filename], check=True)
+    else:
+        log_hours()

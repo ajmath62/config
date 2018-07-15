@@ -143,6 +143,8 @@ function mongo_bg {
 alias bun='sudo rabbitmq-server'  # Rabbit MQ
 alias bund='sudo rabbitmq-server -detached'
 alias cry='celery worker -A gecko --loglevel=DEBUG -B -Q default,crush,udefutures'  # Celery
+alias ol='~/log '
+alias ole='~/log -e gedit '
 alias om=mongo  # MongoDB
 alias omb=mongo_bg
 alias op='sudo -u postgres psql'  # PostgreSQL

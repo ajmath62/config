@@ -36,6 +36,7 @@ o: other
 oa: ascii
 oc: pycharm
 oi: pipes
+ol: log hours
 om: mongodb
 oo: open file
 op: postgresql
