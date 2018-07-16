@@ -37,6 +37,7 @@ PSFAST="\[${GREEN}\]\u[\[${NOCOLOR}\]: \w\$\] "
 
 # PyEnv and RbEnv
 if test -z $PYENV_LOADED; then
+  export PATH="~/.pyenv/bin:~/.rbenv/bin:${PATH}"
   eval "$(~/.pyenv/bin/pyenv init -)"
   eval "$(~/.pyenv/bin/pyenv virtualenv-init -)"
   eval "$(~/.rbenv/bin/rbenv init -)"
