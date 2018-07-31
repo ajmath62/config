@@ -11,7 +11,7 @@ alias bk=ln
 alias bm=mv
 alias br!='rm -i'
 alias brr!='rm -ri'
-alias brr!!='rm -r'  # non-interactive
+alias brrr!='rm -rI'  # non-interactive
 
 # Navigation
 alias bc=cd
@@ -34,9 +34,6 @@ alias bau='baud && baug'
 alias mem='ps aux | head -1; ps aux | grep [p]ython' #memory usage etc. of all running python processes
 alias cron='crontab -e' #editor for crontabs for the current user
 alias scron='sudo crontab -e' #editor for crontabs for the super user
-alias gc='google-chrome --force-device-scale-factor=1'
-alias fx='firefox -foreground '
-alias fx-s='fx -search '
 
 # Database backup and restoration
 function bup {
@@ -65,10 +62,11 @@ alias fu='unalias -a'
 alias fur='unalias -a && source ~/.bash_profile'
 
 # Searching (s)
-alias sa='ag --ignore=node_modules --ignore=doctor/data/*st.py --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column'
+alias sa='ag --ignore=node_modules --ignore=doctor/data/*st.py --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column -i'
 alias sap='sa -G .py$'
 alias sapm='sap --ignore=*/migrations/* '
 alias sar=ag
+alias sas='sa -s'  # case-sensitive
 alias sau='sa -u '  # all
 alias sav='sa --ignore=vendor --ignore=lib '
 alias sg='grep -in'  # not case-sensitive, display line number
@@ -79,6 +77,10 @@ function random_cow {
 }
 
 # Other (o)
+alias obc=google-chrome
+alias obcc='google-chrome --force-device-scale-factor=1'  # make it small on monitors
+alias obf='firefox -foreground '
+alias obfs='firefox -foreground -search '
 alias oo=xdg-open
 alias or=ruby
 alias orr=rails
@@ -88,7 +90,8 @@ alias ov=vim
 # Pipes (oi)
 alias oic=cowsay
 alias oicr='cowsay -f $(random_cow)'
-alias oil=less
+alias oil='less -FRXm '
+alias oilr=less
 alias oit=tail
 alias oith=head
 alias oiv=/usr/share/vim/vim80/macros/less.sh  # vim version of less

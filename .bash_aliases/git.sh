@@ -22,9 +22,19 @@ function git_is_child {
   # First argument is child commit, second is parent commit
   git merge-base --is-ancestor $1 $2 && echo "$1 is a child of $2" || echo "$1 is not a child of $2"
 }
+function git_branch_history {
+  git log --walk-reflogs --pretty='%gs' | sed -n 's/^checkout: moving from \(.*\?\) to .*\?$/\1/p' -n
+}
 function git_last_branch {
-  # Get the name of the branch that the last git checkout operation started at
-  git log --walk-reflogs --pretty='%gs' | sed -n 's/^checkout: moving from \(.*\?\) to .*\?$/\1/p' -n | head -n 1
+  # Get the name of the branch that the nth last git checkout operation started at
+  # If no argument is provided, use the most recent branch
+  nth=${1:-1}
+  git_branch_history | sed -n ${nth}p
+}
+function git_last_branch_op {
+  # Run a git operation on the nth last branch
+  operation=${1}
+  git ${operation} $(git_last_branch ${2}) ${@:3}
 }
 function git_log_hours {
   if test ${1}; then
@@ -40,13 +50,16 @@ function git_log_hours {
 alias gbc='git checkout '
 alias gbcd='gbc development'
 alias gbcm='gbc master'
-alias gbco='gbc $(git_last_branch)'
+alias gbco='git_last_branch_op checkout '
 alias gbcp='gbc production'
 alias gbcs='gbc stable'
 alias gbl='git branch --list '
 alias gbla='git branch --all'
+alias gbm='git branch -m '
 alias gbn='bv "git checkout -b" "git push -u origin"'
 alias gbno='git checkout -b '
+alias gbo=git_last_branch
+alias gbol='git_branch_history | nl -w2 -s": " | oil '
 alias gbr!='git branch -d'
 # Committing (gc)
 alias gca='git add'
@@ -54,6 +67,7 @@ alias gcam='git add */migrations 2> /dev/null || git add */*/migrations'  # add 
 alias gcb='git rebase '
 alias gcbc='git rebase --continue '
 alias gcbm='git rebase master '
+alias gcbo='git_last_branch_op rebase '
 alias gcc='git commit '
 alias gcca='git commit --amend '
 alias gch='git reset HEAD'
@@ -61,7 +75,7 @@ alias gch!='git checkout -- '
 alias gcm='git merge'
 alias gcmd='git merge development'
 alias gcmm='git merge master'
-alias gcmo='git merge $(git_last_branch)'
+alias gcmo='git_last_branch_op merge'
 alias gcp='git add --patch'  # git add by chunks of file
 alias gcq=git_diff_add
 alias gcr!='git rm'
@@ -89,16 +103,19 @@ alias gfm='git mv '
 alias gfl='git ls-files | less -FRXm '
 alias gfr='git rm '
 # Log (gl)
+alias glc='git log --pretty=%H | head -n +1'
 alias glf='git reflog '
 alias glh=git_log_hours 
 alias gll='git log '
 alias glp='git log --patch '
+alias gls='git log --stat '
 # Repository (gp)
+alias gpa='git remote add '
 alias gpd='git pull'
 alias gpf='git fetch '
 alias gpfp='git fetch --prune '
 alias gpl='git remote --verbose'
-alias gpo='git remote add '
+alias gpm='git merge origin/$(git_parse_branch)'
 alias gpr='git pull --rebase'
 alias gpu='git push'
 # Stash (gs)

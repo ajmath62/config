@@ -5,6 +5,7 @@
 [color "status"]
   added = green
   changed = red bold
+  unmerged = red bold
   untracked = magenta
 [core]
   editor = vi

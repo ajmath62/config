@@ -1,11 +1,12 @@
 # Python (p)
 alias pa='python app.py'
 alias pc=pip-compile
+alias pci='pip install pip-tools '
 alias pcs=pip-sync
 alias pcu='pip-compile --upgrade '
 alias pf='pip list'
 alias pi='pip install '
-alias pii='pip install --upgrade pip'
+alias pii='pip install --upgrade pip pip-tools setuptools'  # Things that won't get auto-updated
 alias pir='pip install -r requirements.txt'
 alias piu='pip install --upgrade '
 alias pl='pylint *'
@@ -19,6 +20,7 @@ alias py=python
 # Django (pd)
 alias pdk='python manage.py addstatictoken '
 alias pdm='python manage.py migrate '
+alias pdmd='python manage.py makemigrations --dry-run '
 alias pdmm='python manage.py makemigrations '
 alias pdmq='python manage.py sqlmigrate '
 alias pdms='python manage.py showmigrations '
@@ -129,9 +131,19 @@ function new_component {
     ta $js_file && ta $html_file && echo 'Success!'
 }
 
-# AWS
-alias eb-ssh='echo "source /opt/python/current/env && cd /opt/python/current/app && python manage.py shell_plus --print-sql --quiet-load"; eb ssh '
-alias eb-deploy='eb deploy'
+# AWS (ra)
+alias rac='aws configure '
+
+# Elastic Beanstalk (re)
+alias rel='eb logs '
+alias res='echo "source /opt/python/current/env && cd /opt/python/current/app && python manage.py shell_plus --print-sql --quiet-load"; eb ssh '
+alias rey='eb deploy '
+
+# Heroku (rh)
+alias rhl='heroku logs -t '
+alias rhs='heroku run bash '
+alias rhss='heroku run python manage.py shell_plus --print-sql --quiet-load '
+alias rhy='git push heroku master'
 
 # Specific tasks
 function mongo {

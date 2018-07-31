@@ -34,6 +34,7 @@ j: projects
 
 o: other
 oa: ascii
+ob: browser
 oc: pycharm
 oi: pipes
 ol: log hours
@@ -56,6 +57,11 @@ pr: uninstall
 pv: version
 pw: show library
 py: run
+
+r: remote
+ra: AWS
+re: EB
+rh: Heroku
 
 s: search
 sa: silversearcher
