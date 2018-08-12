@@ -38,11 +38,11 @@ function git_last_branch_op {
 }
 function git_log_hours {
   if test ${1}; then
-    start_date="--since=${1}"
+    start_date=${1}
   else
-    unset start_date
+    start_date=midnight
   fi
-  git log --author=ajmath62@gmail.com --all --reverse --pretty="%ad: %s" --date="format:%h %d %I:%M%P" ${start_date}
+  git log --author=ajmath62@gmail.com --all --reverse --pretty="%ad: %s" --date="format:%h %d %I:%M%P" --since=${start_date}
 }
 
 # Git aliases (g)
@@ -66,6 +66,7 @@ alias gca='git add'
 alias gcam='git add */migrations 2> /dev/null || git add */*/migrations'  # add grandchild or great-grandchild migration directories
 alias gcb='git rebase '
 alias gcbc='git rebase --continue '
+alias gcbi='git rebase --interactive '
 alias gcbm='git rebase master '
 alias gcbo='git_last_branch_op rebase '
 alias gcc='git commit '

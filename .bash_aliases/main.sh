@@ -15,6 +15,7 @@ alias brrr!='rm -rI'  # non-interactive
 
 # Navigation
 alias bc=cd
+alias bcd='cd ~/Documents'
 alias bch='cd ~'
 alias bcu='cd ..'
 alias bcz='cd ~/zagaran'

@@ -1,4 +1,4 @@
-# Show git branch
+# Get current branch and short commit hash
 # The 2> /dev/null is because there is stderr if not in a git repository
 function git_parse_branch {
   git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* //"

@@ -6,8 +6,9 @@ alias pcs=pip-sync
 alias pcu='pip-compile --upgrade '
 alias pf='pip list'
 alias pi='pip install '
-alias pii='pip install --upgrade pip pip-tools setuptools'  # Things that won't get auto-updated
+alias pii='pip install --upgrade pip setuptools'  # Things that won't get auto-updated
 alias pir='pip install -r requirements.txt'
+alias pit='pip install --upgrade pip pip-tools setuptools'  # Ditto but with pip-tools
 alias piu='pip install --upgrade '
 alias pl='pylint *'
 alias pp=ipython
@@ -24,16 +25,18 @@ alias pdmd='python manage.py makemigrations --dry-run '
 alias pdmm='python manage.py makemigrations '
 alias pdmq='python manage.py sqlmigrate '
 alias pdms='python manage.py showmigrations '
-alias pdn='python manage.py test --keepdb --exe --verbosity=3 --with-id '  # with nose
-alias pdnf='pdn --failed'
 alias pdp='python manage.py '
 alias pdq='python manage.py dbshell'
 alias pdr='python manage.py runserver_plus'
 alias pdrm='python manage.py runserver'
 alias pds='python manage.py shell_plus --print-sql --quiet-load'
 alias pdsm='python manage.py shell_plus'
-alias pdt='python manage.py test --keepdb --verbosity=3 '  # without nose
 alias pdw='python -W ignore manage.py '
+
+# Testing (pt, pdt)
+alias pdt='python manage.py test --keepdb --exe --verbosity=3 --with-id '
+alias pdtf='pdt --failed'
+alias pdtn='python manage.py test --keepdb --verbosity=3 '  # without nose
 
 # JavaScript (e)
 function es_lint {
