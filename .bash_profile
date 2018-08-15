@@ -35,6 +35,15 @@ PS1="(\$(local_version)) \[${GREEN}\]\u\[${YELLOW}\] (\$(git_parse_branch_and_co
 PSFULL=${PS1}
 PSFAST="\[${GREEN}\]\u[\[${NOCOLOR}\]: \w\$\] "
 
+# Set up autocompletion for bash and git
+source /usr/share/bash-completion/bash_completion
+source /usr/share/bash-completion/completions/git
+# Allow branch autocompletion for all checkout-like aliases
+CLA='gbc gcb gcm gdd gdi gdl gds gdv gdvl gdvs glc gll glp gls'
+for _alias in ${CLA}; do
+  __git_complete ${_alias} _git_checkout
+done
+
 # PyEnv and RbEnv
 if test -z $PYENV_LOADED; then
   export PATH="~/.pyenv/bin:~/.rbenv/bin:${PATH}"

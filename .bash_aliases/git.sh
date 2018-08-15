@@ -55,7 +55,7 @@ alias gbcp='gbc production'
 alias gbcs='gbc stable'
 alias gbl='git branch --list '
 alias gbla='git branch --all'
-alias gbm='git branch -m '
+alias gbm='git branch -m '  # rename branch
 alias gbn='bv "git checkout -b" "git push -u origin"'
 alias gbno='git checkout -b '
 alias gbo=git_last_branch
@@ -92,8 +92,8 @@ alias gdfu='git status -uno | cowsay -n -f $(random_cow)'
 alias gdi=git_is_child
 alias gdl='git diff '  # line diff
 alias gdlc='git diff --cached'
-alias gdo='gd-d master origin/master'
-alias gdos='gd-s master origin/master'
+alias gdo='gdd master origin/master'
+alias gdos='gds master origin/master'
 alias gds='git df --stat'  # displays diff but files only
 alias gdv='git show --word-diff=color '
 alias gdvl='git show '
@@ -102,7 +102,7 @@ alias gdvs='git show --stat '
 alias gfc='git ls-files | wc '
 alias gfm='git mv '
 alias gfl='git ls-files | less -FRXm '
-alias gfr='git rm '
+alias gfr!='git rm '
 # Log (gl)
 alias glc='git log --pretty=%H | head -n +1'
 alias glf='git reflog '
