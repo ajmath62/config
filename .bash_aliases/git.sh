@@ -47,23 +47,26 @@ function git_log_hours {
 
 # Git aliases (g)
 # Branches (gb)
+alias gbb='git merge-base '
 alias gbc='git checkout '
 alias gbcd='gbc development'
 alias gbcm='gbc master'
 alias gbco='git_last_branch_op checkout '
 alias gbcp='gbc production'
 alias gbcs='gbc stable'
+alias gbi=git_is_child
 alias gbl='git branch --list '
 alias gbla='git branch --all'
 alias gbm='git branch -m '  # rename branch
 alias gbn='bv "git checkout -b" "git push -u origin"'
 alias gbno='git checkout -b '
 alias gbo=git_last_branch
-alias gbol='git_branch_history | nl -w2 -s": " | oil '
+alias gbol='git_branch_history | nl -w2 -s": " | oilr '
 alias gbr!='git branch -d'
 # Committing (gc)
 alias gca='git add'
 alias gcam='git add */migrations 2> /dev/null || git add */*/migrations'  # add grandchild or great-grandchild migration directories
+alias gcap='git add --patch'  # git add by chunks of file
 alias gcb='git rebase '
 alias gcbc='git rebase --continue '
 alias gcbi='git rebase --interactive '
@@ -77,7 +80,8 @@ alias gcm='git merge'
 alias gcmd='git merge development'
 alias gcmm='git merge master'
 alias gcmo='git_last_branch_op merge'
-alias gcp='git add --patch'  # git add by chunks of file
+alias gcp='git cherry-pick '
+alias gcpo='git_last_branch_op cherry-pick '
 alias gcq=git_diff_add
 alias gcr!='git rm'
 # Diff (gd)
@@ -89,7 +93,6 @@ alias gdfc='git status'  # no cow
 alias gdfcu='git status -uno'  # hide untracked files
 alias gdfs='git status | cowsay -W80 -f $(random_cow)'
 alias gdfu='git status -uno | cowsay -n -f $(random_cow)'
-alias gdi=git_is_child
 alias gdl='git diff '  # line diff
 alias gdlc='git diff --cached'
 alias gdo='gdd master origin/master'
@@ -113,6 +116,7 @@ alias gls='git log --stat '
 # Repository (gp)
 alias gpa='git remote add '
 alias gpd='git pull'
+alias gpe='git remote set-url '
 alias gpf='git fetch '
 alias gpfp='git fetch --prune '
 alias gpl='git remote --verbose'

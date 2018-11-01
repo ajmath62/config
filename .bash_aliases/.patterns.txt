@@ -5,6 +5,7 @@ be: print
 bk: link
 bl: list
 bm: move file
+bo: copy/paste
 br: delete
 bs: sudo
 bt: type

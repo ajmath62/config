@@ -11,6 +11,7 @@ parser.add_argument('filename', default='timesheet.txt', help='the timesheet fil
                     nargs='?', type=str)
 parser.add_argument('-e', '--edit', action='store', const='vi', dest='editor',
                     help='edit the timesheet file manually', nargs='?', type=str)
+parser.add_argument('-r', '--read', action='store_true', help='display the contents of the file')
 
 
 def log_hours():
@@ -48,7 +49,9 @@ def log_hours():
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.editor:
+    if args.read:
+        subprocess.run(['cat', args.filename], check=True)
+    elif args.editor:
         subprocess.run([args.editor, args.filename], check=True)
     else:
         log_hours()
