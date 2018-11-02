@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 """ Check that the files to be committed are acceptable """
 import os
+import re
 import subprocess
+
+from hook_helpers import PRINT_STATEMENTS, ignore_or_exit
 
 
 def check_dash_m():
@@ -9,7 +12,7 @@ def check_dash_m():
     if os.getenv('GIT_EDITOR', None) == ':':
         print('The -m argument to git commit was used. Please enter your commit message '
               'in an editor.')
-        exit(1)
+        ignore_or_exit()
 
 
 def check_log_file():
@@ -19,9 +22,40 @@ def check_log_file():
     file_list = files.split(b'\x00')
     if b'timesheet.txt' in file_list:
         print('One of the files being committed is timesheet.txt. Don\'t commit your timesheet!')
-        exit(1)
+        ignore_or_exit()
+
+
+def check_print_statements():
+    """ Check that there are no print/puts/console statements in the diff """
+    diff_text = subprocess.run(['git', 'diff', '--cached', '--unified=0'], check=True,
+                               stdout=subprocess.PIPE).stdout
+    
+    danger_lines = []
+    for line in diff_text.decode().split('\n'):
+        # Look for lines that start with a plus sign followed by whitespace
+        match = re.match('^\+ +(.*)$', line)
+        if match is None:
+            continue
+        
+        # If the line contains any of the listed print statements, alert the committer
+        text = match.group(1)
+        if any(ps in text for ps in PRINT_STATEMENTS):
+            danger_lines.append(text)
+    
+    if danger_lines:
+        if len(danger_lines) == 1:
+            # This is separated because there are different phrasings
+            print('You added one line with a logging statement:')
+            print(danger_lines[0])
+            print('You probably didn\'t mean to commit this.')
+        else:
+            print('You added ' + str(len(danger_lines)) + ' lines with logging statements:')
+            print('\n'.join(danger_lines))
+            print('You probably didn\'t mean to commit these.')
+        ignore_or_exit()
 
 
 if __name__ == '__main__':
     check_dash_m()
     check_log_file()
+    check_print_statements()
