@@ -53,6 +53,11 @@ aliases['unalias'] = _bash_unalias
 # Virtual environments with Vox
 xontrib load vox
 $VIRTUALENV_HOME = $HOME + '/.vox'
+
+# Load aliases
+source ~/.xonsh_aliases/.init.xsh
+
+# Python virtual environments
 def _curr():
     return  $(pwd).rsplit('/', 1)[1].rstrip()
 def _vox_new(args):
