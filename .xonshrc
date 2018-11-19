@@ -44,8 +44,8 @@ $XONSH_GITSTATUS_CHANGED = '{NO_COLOR}{BLUE}+'
 $XONSH_GITSTATUS_CLEAN = '{BOLD_GREEN}✓'
 $XONSH_GITSTATUS_CONFLICTS = '{RED}×'
 $XONSH_GITSTATUS_HASH = ''
-$XONSH_GITSTATUS_OPERATION = '{CYAN}'
-$XONSH_GITSTATUS_STAGED = '{GREEN}●'
+$XONSH_GITSTATUS_OPERATION = '{NO_COLOR}{UNDERLINE_CYAN}'
+$XONSH_GITSTATUS_STAGED = '{NO_COLOR}{GREEN}●'
 $XONSH_GITSTATUS_STASHED = '{NO_COLOR}{WHITE}⚑'
 $XONSH_GITSTATUS_UNTRACKED = '{NO_COLOR}{BOLD_BLACK}…'
 # Actual prompt
@@ -100,5 +100,5 @@ def _vox_on(args):
 aliases['ve'] = _vox_on
 aliases['vl'] = 'vox list'
 aliases['vn'] = _vox_new
-aliases['vrr'] = 'vox rm'
+aliases['vr?'] = 'vox rm'
 aliases['vx'] = 'vox exit'

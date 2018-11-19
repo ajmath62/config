@@ -54,17 +54,17 @@ def _git_branch_history():
 def _git_last_branch(args):
     # Get the name of the branch that the nth last git checkout operation started at
     # If no argument is provided, use the most recent branch
-    nth = args[0] - 1 if args else 0
+    nth = int(args[0]) - 1 if args else 0
     return _git_branch_history()[nth]
 
-def _git_last_branch_op(args):
+def _git_last_branch_op(op, args):
     # Run a git operation on the nth last branch
-    last_branch = _git_last_branch(args[1:])
-    return $(git @(args[0]) @(last_branch) @(args[2:]))
+    last_branch = _git_last_branch(args)
+    return $(git @(op) @(last_branch) @(args[1:]))
 
 def _git_log_hours(args):
     start_date = args[0] if args else 'midnight'
-    return $(git log --author=ajmath62@gmail.com --all --reverse --pretty="%ad: %s" --date="format:%h %d %I:%M%P" --since @(start_date))
+    $[git log --author=ajmath62@gmail.com --all --reverse '--pretty=%ad: %s' '--date=format:%a %h %d %I:%M%P' --since @(start_date)]
 
 def _git_status_cow():
     return $(git status | cowsay -n -f @(_random_cow()))
@@ -76,38 +76,39 @@ aliases['gbb'] = 'git merge-base '
 aliases['gbc'] = 'git checkout '
 aliases['gbcd'] = 'gbc development'
 aliases['gbcm'] = 'gbc master'
-aliases['gbco'] = 'git_last_branch_op checkout '
+aliases['gbco'] = lambda args: _git_last_branch_op('checkout', args)
 aliases['gbcp'] = 'gbc production'
 aliases['gbcs'] = 'gbc stable'
 aliases['gbi'] = _git_is_child
 aliases['gbl'] = 'git branch --list '
 aliases['gbla'] = 'git branch --all'
 aliases['gbm'] = 'git branch -m '  # rename branch
-aliases['gbn'] = 'bv "git checkout -b" "git push -u origin"'
+aliases['gbn'] = lambda args: ![git checkout -b @(args[0])] and ![git push -u origin @(args[0])]
 aliases['gbno'] = 'git checkout -b '
 aliases['gbol'] = 'git_branch_history | nl -w2 -s": " | oilr '
-aliases['gbr!'] = 'git branch -d'
+aliases['gbr?'] = 'git branch -d'
 # Committing (gc)
 aliases['gca'] = 'git add'
-aliases['gcam'] = 'git add */migrations 2> /dev/null || git add */*/migrations'  # add grandchild or great-grandchild migration directories
+# add grandchild or great-grandchild migration directories
+aliases['gcam'] = lambda: ![git add */migrations err> /dev/null] or ![git add */*/migrations]
 aliases['gcap'] = 'git add --patch'  # git add by chunks of file
 aliases['gcb'] = 'git rebase '
 aliases['gcbc'] = 'git rebase --continue '
 aliases['gcbi'] = 'git rebase --interactive '
 aliases['gcbm'] = 'git rebase master '
-aliases['gcbo'] = 'git_last_branch_op rebase '
+aliases['gcbo'] = lambda args: _git_last_branch_op('rebase', args)
 aliases['gcc'] = 'git commit '
 aliases['gcca'] = 'git commit --amend '
 aliases['gch'] = 'git reset HEAD'
-aliases['gch!'] = 'git checkout -- '
+aliases['gch?'] = 'git checkout -- '
 aliases['gcm'] = 'git merge'
 aliases['gcmd'] = 'git merge development'
 aliases['gcmm'] = 'git merge master'
-aliases['gcmo'] = 'git_last_branch_op merge'
+aliases['gcmo'] = lambda args: _git_last_branch_op('merge', args)
 aliases['gcp'] = 'git cherry-pick '
-aliases['gcpo'] = 'git_last_branch_op cherry-pick '
+aliases['gcpo'] = lambda args: _git_last_branch_op('cherry-pick', args)
 aliases['gcq'] = _git_diff_add
-aliases['gcr!'] = 'git rm'
+aliases['gcr?'] = 'git rm'
 # Diff (gd)
 aliases['gdc'] = 'git df --cached'  # displays diff of staged changes
 aliases['gdcs'] = 'git df --cached --stat'
@@ -126,14 +127,14 @@ aliases['gdv'] = 'git show --word-diff=color '
 aliases['gdvl'] = 'git show '
 aliases['gdvs'] = 'git show --stat '
 # File operations (gf)
-aliases['gfc'] = 'git ls-files | wc '
+aliases['gfc'] = lambda: $[git ls-files | wc]
 aliases['gfm'] = 'git mv '
-aliases['gfl'] = 'git ls-files | less -FRXm '
-aliases['gfr!'] = 'git rm '
+aliases['gfl'] = lambda: $[git ls-files | less -FRXm]
+aliases['gfr?'] = 'git rm '
 # Log (gl)
-aliases['glc'] = 'git log --pretty=%H | head -n +1'
+aliases['glc'] = lambda: $[git log --pretty=%H | head -n +1]
 aliases['glf'] = 'git reflog '
-aliases['glh'] = _git_log_hours 
+aliases['glh'] = _git_log_hours
 aliases['gll'] = 'git log '
 aliases['glo'] = _git_last_branch
 aliases['glp'] = 'git log --patch '
@@ -145,14 +146,14 @@ aliases['gpe'] = 'git remote set-url '
 aliases['gpf'] = 'git fetch '
 aliases['gpfp'] = 'git fetch --prune '
 aliases['gpl'] = 'git remote --verbose'
-aliases['gpm'] = 'git merge origin/$(git_parse_branch)'
+aliases['gpm'] = lambda: $[git merge @('origin/' + $PROMPT_FIELDS['curr_branch']())]
 aliases['gpr'] = 'git pull --rebase'
 aliases['gpu'] = 'git push'
 # Stash (gs)
 aliases['gsl'] = 'git stash list'
 aliases['gso'] = 'git stash pop'
 aliases['gsp'] = 'git stash save --patch'  # git stash by chunks of file
-aliases['gsr!'] = 'git stash drop'
+aliases['gsr?'] = 'git stash drop'
 aliases['gss'] = 'git stash save'
 aliases['gsw'] = 'git stash show -u'  # displays diff of stash
 aliases['gsws'] = 'git stash show '

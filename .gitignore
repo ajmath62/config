@@ -2,8 +2,10 @@
 .aws/config
 .bash_aliases/projects.sh
 .*history
+.xonsh_aliases/projects.xsh
 
 # Way too big and easily recoverable
 .virtualenvs
 .pyenv
+.vox
 
