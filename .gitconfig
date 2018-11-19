@@ -10,10 +10,11 @@
 [core]
   editor = vi
   pager = less
+	excludesfile = /home/aaron/.gitignore-global
 [diff]
   wordRegex = [a-zA-Z0-9_-]+|.
 [init]
-	templatedir = ~/.git-templates
+  templateDir = ~/.git-templates
 [push]
   default = simple
 [user]
