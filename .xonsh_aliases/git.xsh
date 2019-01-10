@@ -30,7 +30,7 @@ def _git_diff_add():
                 $[git add --patch @(file)]
                 done = True
             elif yn.startswith('e'):
-                $(vim @(file))
+                $[vim @(file)]
                 clear
                 $[git df -- @(file)]
             else:
@@ -60,7 +60,7 @@ def _git_last_branch(args):
 def _git_last_branch_op(op, args):
     # Run a git operation on the nth last branch
     last_branch = _git_last_branch(args)
-    return $(git @(op) @(last_branch) @(args[1:]))
+    return ![git @(op) @(last_branch) @(args[1:])]
 
 def _git_log_hours(args):
     start_date = args[0] if args else 'midnight'
@@ -85,18 +85,14 @@ aliases['gbla'] = 'git branch --all'
 aliases['gbm'] = 'git branch -m '  # rename branch
 aliases['gbn'] = lambda args: ![git checkout -b @(args[0])] and ![git push -u origin @(args[0])]
 aliases['gbno'] = 'git checkout -b '
-aliases['gbol'] = 'git_branch_history | nl -w2 -s": " | oilr '
+aliases['gbol'] = lambda: ![echo @('\n'.join(f'{idx: 2}\t{e}' for idx, e in enumerate(_git_branch_history(), start=1))) | oilr]
 aliases['gbr?'] = 'git branch -d'
+aliases['gbr??'] = 'git branch -D'
 # Committing (gc)
 aliases['gca'] = 'git add'
 # add grandchild or great-grandchild migration directories
 aliases['gcam'] = lambda: ![git add */migrations err> /dev/null] or ![git add */*/migrations]
 aliases['gcap'] = 'git add --patch'  # git add by chunks of file
-aliases['gcb'] = 'git rebase '
-aliases['gcbc'] = 'git rebase --continue '
-aliases['gcbi'] = 'git rebase --interactive '
-aliases['gcbm'] = 'git rebase master '
-aliases['gcbo'] = lambda args: _git_last_branch_op('rebase', args)
 aliases['gcc'] = 'git commit '
 aliases['gcca'] = 'git commit --amend '
 aliases['gch'] = 'git reset HEAD'
@@ -126,6 +122,14 @@ aliases['gds'] = 'git df --stat'  # displays diff but files only
 aliases['gdv'] = 'git show --word-diff=color '
 aliases['gdvl'] = 'git show '
 aliases['gdvs'] = 'git show --stat '
+# Rebase (ge)
+aliases['ge'] = 'git rebase '
+aliases['gea?'] = 'git rebase --abort '
+aliases['gec'] = 'git rebase --continue '
+aliases['gei'] = 'git rebase --interactive '
+aliases['gem'] = 'git rebase master '
+aliases['geo'] = lambda args: _git_last_branch_op('rebase', args)
+aliases['gew'] = 'git rebase --show-current-patch '
 # File operations (gf)
 aliases['gfc'] = lambda: $[git ls-files | wc]
 aliases['gfm'] = 'git mv '
@@ -147,8 +151,10 @@ aliases['gpf'] = 'git fetch '
 aliases['gpfp'] = 'git fetch --prune '
 aliases['gpl'] = 'git remote --verbose'
 aliases['gpm'] = lambda: $[git merge @('origin/' + $PROMPT_FIELDS['curr_branch']())]
+aliases['gpn'] = 'git clone'
 aliases['gpr'] = 'git pull --rebase'
 aliases['gpu'] = 'git push'
+aliases['gpun'] = lambda: $[git push -u @('origin/' + $PROMPT_FIELDS['curr_branch']())]
 # Stash (gs)
 aliases['gsl'] = 'git stash list'
 aliases['gso'] = 'git stash pop'
@@ -157,3 +163,10 @@ aliases['gsr?'] = 'git stash drop'
 aliases['gss'] = 'git stash save'
 aliases['gsw'] = 'git stash show -u'  # displays diff of stash
 aliases['gsws'] = 'git stash show '
+# Bisect (gx)
+aliases['gx'] = 'git bisect '
+aliases['gxk'] = 'git bisect skip '
+aliases['gxn'] = 'git bisect good '  # new
+aliases['gxo'] = 'git bisect bad '  # old
+aliases['gxr?'] = 'git bisect reset '
+aliases['gxx'] = 'git bisect start '
