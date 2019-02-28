@@ -1,15 +1,19 @@
 def _git_diff_add():
     status = $(git status --porcelain=v1)
-    regex = r'^( M|UU) (.*)$'
+    regex = r'^( M|UU|\?\?) (.*)$'
     file_list = re.findall(regex, status, re.MULTILINE)
     
     all_done = False
-    for _, file in file_list:
+    for match_type, file in file_list:
         clear
-        $[git df -- @(file)]
+        if match_type == '??':
+            # Untracked file
+            $[bat @(file)]
+        else:
+            $[git df -- @(file)]
         done = False
         while not done:
-            yn = input(f'Git add {file}? (y/n/q/l/w/e/p) ').lower()
+            yn = input(f'Git add {file}? (y/n/q/c/l/w/e/p) ').lower()
             if yn.startswith('y'):
                 $[git add @(file)]
                 done = True
@@ -18,6 +22,9 @@ def _git_diff_add():
             elif yn.startswith('q'):
                 done = True
                 all_done = True
+            elif yn.startswith('c'):
+                clear
+                $[bat @(file)]
             elif yn.startswith('l'):
                 clear
                 $[git diff -- @(file)]
@@ -33,7 +40,7 @@ def _git_diff_add():
                 clear
                 $[git df -- @(file)]
             else:
-                print('Please answer yes, no, quit, line, word, edit or patch.')
+                print('Please answer yes, no, quit, cat, line, word, edit or patch.')
         if all_done:
             break
     clear
