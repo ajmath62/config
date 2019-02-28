@@ -1,11 +1,10 @@
 def _git_diff_add():
-    status = $(git status).split('\n')
-    changed_color='1;31'  # git config color.status.changed; in this case, bold red
-    matches = [re.search('^\t\x1b\[1;31m(?:both )?modified:   (.*)\x1b\[m$', l) for l in status]
-    file_list = [m.group(1) for m in matches if m]
+    status = $(git status --porcelain=v1)
+    regex = r'^( M|UU) (.*)$'
+    file_list = re.findall(regex, status, re.MULTILINE)
     
     all_done = False
-    for file in file_list:
+    for _, file in file_list:
         clear
         $[git df -- @(file)]
         done = False
