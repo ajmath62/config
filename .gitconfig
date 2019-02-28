@@ -1,5 +1,6 @@
 [alias]
   df = diff --word-diff=color
+  gud = fetch
 [color]
   status = always
 [color "status"]

@@ -69,6 +69,17 @@ def _git_log_hours(args):
 def _git_status_cow():
     return $(git status | cowsay -n -f @(_random_cow()))
 
+def _git_reset_local_changes(args):
+    stash = $(git diff) or $(git diff --cached)
+    if stash:
+        # There are local changes, so stash them before resetting
+        ![git stash]
+    ![git reset --hard @(args)]
+    if stash:
+        # Bring back local changes
+        ![git stash pop]
+
+
 
 # Git aliases (g)
 # Branches (gb)
@@ -79,10 +90,14 @@ aliases['gbcm'] = 'gbc master'
 aliases['gbco'] = lambda args: _git_last_branch_op('checkout', args)
 aliases['gbcp'] = 'gbc production'
 aliases['gbcs'] = 'gbc stable'
+aliases['gbe'] = 'git branch -m '  # rename branch
 aliases['gbi'] = _git_is_child
 aliases['gbl'] = 'git branch --list '
-aliases['gbla'] = 'git branch --all'
-aliases['gbm'] = 'git branch -m '  # rename branch
+aliases['gbla'] = 'git branch --list --all'
+aliases['gblav'] = 'git branch --list --all --verbose --verbose '
+aliases['gblv'] = 'git branch --list --verbose '
+aliases['gblvv'] = 'git branch --list --verbose --verbose '
+aliases['gbm'] = _git_reset_local_changes
 aliases['gbn'] = lambda args: ![git checkout -b @(args[0])] and ![git push -u origin @(args[0])]
 aliases['gbno'] = 'git checkout -b '
 aliases['gbol'] = lambda: ![echo @('\n'.join(f'{idx: 2}\t{e}' for idx, e in enumerate(_git_branch_history(), start=1))) | oilr]
@@ -98,6 +113,7 @@ aliases['gcca'] = 'git commit --amend '
 aliases['gch'] = 'git reset HEAD'
 aliases['gch?'] = 'git checkout -- '
 aliases['gcm'] = 'git merge'
+aliases['gcma?'] = 'git merge --abort '
 aliases['gcmd'] = 'git merge development'
 aliases['gcmm'] = 'git merge master'
 aliases['gcmo'] = lambda args: _git_last_branch_op('merge', args)
@@ -120,6 +136,7 @@ aliases['gdo'] = 'gdd master origin/master'
 aliases['gdos'] = 'gds master origin/master'
 aliases['gds'] = 'git df --stat'  # displays diff but files only
 aliases['gdv'] = 'git show --word-diff=color '
+aliases['gdvc'] = 'git show --no-patch '
 aliases['gdvl'] = 'git show '
 aliases['gdvs'] = 'git show --stat '
 # Rebase (ge)
@@ -154,19 +171,21 @@ aliases['gpm'] = lambda: $[git merge @('origin/' + $PROMPT_FIELDS['curr_branch']
 aliases['gpn'] = 'git clone'
 aliases['gpr'] = 'git pull --rebase'
 aliases['gpu'] = 'git push'
-aliases['gpun'] = lambda: $[git push -u @('origin/' + $PROMPT_FIELDS['curr_branch']())]
+aliases['gpun'] = lambda: $[git push -u origin @($PROMPT_FIELDS['curr_branch']())]
+aliases['gput'] = 'git push --tags '
 # Stash (gs)
 aliases['gsl'] = 'git stash list'
 aliases['gso'] = 'git stash pop'
 aliases['gsp'] = 'git stash save --patch'  # git stash by chunks of file
 aliases['gsr?'] = 'git stash drop'
-aliases['gss'] = 'git stash save'
+aliases['gss'] = 'git stash push'
 aliases['gsw'] = 'git stash show -u'  # displays diff of stash
 aliases['gsws'] = 'git stash show '
 # Bisect (gx)
 aliases['gx'] = 'git bisect '
 aliases['gxk'] = 'git bisect skip '
-aliases['gxn'] = 'git bisect good '  # new
-aliases['gxo'] = 'git bisect bad '  # old
+aliases['gxl'] = 'git bisect log '
+aliases['gxn'] = 'git bisect bad '  # new
+aliases['gxo'] = 'git bisect good '  # old
 aliases['gxr?'] = 'git bisect reset '
 aliases['gxx'] = 'git bisect start '

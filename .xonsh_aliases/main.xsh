@@ -2,6 +2,9 @@
 aliases['be'] = 'echo'
 aliases['bs'] = 'sudo'
 aliases['bs?'] = 'sudo su'
+aliases['bt'] = 'bat'
+aliases['bta'] = 'bat -A'
+aliases['btc'] = 'cat'
 aliases['bw'] = 'which'
 aliases['bwp'] = 'which python'
 
@@ -52,35 +55,36 @@ def _edit_aliases(args):
     file = f'/home/aaron/.xonsh_aliases/{args[0]}.xsh'
     if !(test -f @(file)):
         # Argument that is an actual file -> edit that alias file
-        $[gedit @(file)]
+        $[vim @(file)]
     else:
         print('No such alias file found.\nAvailable alias files:')
         for file in $(ls -A ~/.xonsh_aliases).split('\n'):
             print(file[:-4])  # strip .xsh\n
 
 aliases['fa'] = _edit_aliases
-aliases['fe'] = 'gedit ~/.xonshrc '
+aliases['fe'] = 'vim ~/.xonshrc '
 aliases['fs'] = 'source ~/.xonshrc'
 aliases['fu'] = 'unalias -a'
 aliases['fur'] = 'unalias -a && source ~/.xonshrc'
 
 # Task PID
 def _find_task_pid(args):
-  return re.search(f'(?m)^ (\d+) .*{args[0]}', $(ps -e)).group(1)
+  return re.search(f'(?m)^ ?(\d+) .*{args[0]}', $(ps -e)).group(1)
 
 def _kill_task(args):
   $[kill @(_find_task_pid(args))]
 
 
 # Searching (s)
-aliases['sa'] = 'ag --ignore=node_modules --ignore=doctor/data/*st.py --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column -i'
+aliases['sa'] = 'ag --ignore=node_modules --ignore=*.json --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column -i'
 aliases['sap'] = 'sa -G .py$'
 aliases['sapm'] = 'sap --ignore=*/migrations/* '
 aliases['sar'] = 'ag'
 aliases['sas'] = 'sa -s'  # case-sensitive
 aliases['sau'] = 'sa -u '  # all
-aliases['sav'] = 'sa --ignore=vendor --ignore=lib --ignore=packages '
-aliases['sf'] = 'find $(pwd) | grep -in '
+aliases['sav'] = 'sa --ignore=vendor --ignore=lib --ignore=packages' 
+aliases['sf'] = lambda args: ![find @($(pwd).rstrip('\n')) -name @(args[0])]  # find file containing name
+aliases['sfr'] = lambda args: ![find @($(pwd).rstrip('\n')) -regex @(args[0])]  # find file exactly matching regex
 aliases['sg'] = 'grep -in'  # not case-sensitive, display line number
 aliases['sr'] = _find_task_pid
 aliases['srk?'] = _kill_task
@@ -98,7 +102,7 @@ aliases['obfs'] = 'firefox -foreground -search '
 aliases['oo'] = 'xdg-open'
 aliases['or'] = 'ruby'
 aliases['orr'] = 'rails'
-aliases['os'] = 'sqlite'
+aliases['os'] = 'sqlite3'
 aliases['ov'] = 'vim'
 
 # Pipes (oi)
@@ -109,3 +113,29 @@ aliases['oilr'] = 'less'
 aliases['oit'] = 'tail'
 aliases['oith'] = 'head'
 aliases['oiv'] = '/usr/share/vim/vim80/macros/less.sh'  # vim version of less
+
+# Man pages
+def _mansplain(args):
+    if not args:
+        return 'Actually, you need to specify the mansplain page you want.'
+    import random
+    freq = 0.55
+    manpage = $(man --no-justification @(args))
+    description = re.search(r'(?<=^DESCRIPTION\n).*?(?=^[A-Z]+)', manpage, flags=re.MULTILINE | re.DOTALL).group()
+    desc_lines = description.splitlines()
+    for idx, line in enumerate(desc_lines):
+        line_content = line.lstrip()
+        if not line_content or line_content.startswith('-'):
+            # This line should not be actually'd
+            continue
+        if random.random() > freq:
+            # Only actually lines at frequency `freq`
+            continue
+        # The new line should have `Actually, ` before the content, and the first character of the original content
+        # should be made lowercase.
+        new_line = ' ' * (len(line) - len(line_content)) + 'Actually, ' + line_content[0].lower() + line_content[1:]
+        desc_lines[idx] = new_line
+    new_description = '\n'.join(desc_lines)
+    return manpage.replace(description, new_description)
+aliases['bp'] = aliases['mansplain'] = lambda args: ![echo @(_mansplain(args)) | oil]
+aliases['bpo'] = 'man'

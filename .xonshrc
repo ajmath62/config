@@ -1,3 +1,4 @@
+import inspect
 import re
 
 # Useful environment variables
@@ -6,14 +7,16 @@ $AUTO_PUSHD = True  # always PUSHD instead of CD
 $XONSH_SHOW_TRACEBACK = True
 
 # Path
-$PATH = ['~/.pyenv/shims', '~/.rbenv/shims', '~/.pyenv/bin'] + $PATH
+$PATH = ['~/.pyenv/shims', '~/.rbenv/shims', '~/.pyenv/bin', '~/.cargo/bin'] + $PATH
 
 # Prompt
 # Environment display
 def _env_name_always():
     env_name = $PROMPT_FIELDS['env_name']()
     if !(test -e ./Gemfile):
-        return '(' + $(rbenv version-name).rstrip() + ')'
+        return '(ruby ' + $(rbenv version-name).rstrip() + ')'
+    elif !(test -e ./Cargo.toml):
+        return '(rust ' + re.search(r'^rustc ([\d.]+) ', $(rustc --version)).group(1) + ')'
     elif env_name is not None:
         return env_name
     else:
@@ -49,10 +52,13 @@ $XONSH_GITSTATUS_STAGED = '{NO_COLOR}{GREEN}●'
 $XONSH_GITSTATUS_STASHED = '{NO_COLOR}{WHITE}⚑'
 $XONSH_GITSTATUS_UNTRACKED = '{NO_COLOR}{BOLD_BLACK}…'
 # Actual prompt
-$PROMPT = '{env_name_always:{} }{GREEN}{user}{YELLOW}{gitstatus_hash: ({})}{NO_COLOR} {BOLD_BLUE}{short_cwd}{prompt_end}{NO_COLOR} '
+$PROMPT = '{env_name_always:{} }{GREEN}{user}{YELLOW}{gitstatus_hash: ({})}{NO_COLOR} {BOLD_BLUE}{short_cwd}\n{prompt_end}{NO_COLOR} '
 
 # Terminal title
 $TITLE = '\N{SPIRAL SHELL} {current_job:{}: }{short_cwd}'
+
+# Bat setup
+$BAT_PAGER = 'less -FRXm'
 
 # Making aliases easy
 def _bash_alias(args):
@@ -65,7 +71,11 @@ def _bash_alias(args):
         else:
             # Getter
             name = args[0]
-            print(aliases[name])
+            try:
+                return inspect.getsource(aliases[name])
+            except TypeError:
+                # It's a list, not a function
+                return ' '.join(aliases[name])
 aliases['alias'] = _bash_alias
 
 def _bash_unalias(args):
@@ -80,25 +90,5 @@ $VIRTUALENV_HOME = $HOME + '/.vox'
 # Load aliases
 source ~/.xonsh_aliases/.init.xsh
 
-# Python virtual environments
-def _curr():
-    return  $(pwd).rsplit('/', 1)[1].rstrip()
-def _vox_new(args):
-    name = args[0] if args else _curr()
-    version = args[1] if len(args) > 1 else None
-    
-    if version:
-        $PYENV_VERSION_OLD = ${...}.get('PYENV_VERSION', None)
-        $PYENV_VERSION=version
-    vox new @(name)
-    vox enter @(name)
-    if version:
-        $PYENV_VERSION=$PYENV_VERSION_OLD
-def _vox_on(args):
-    name = args[0] if args else _curr()
-    vox enter @(name)
-aliases['ve'] = _vox_on
-aliases['vl'] = 'vox list'
-aliases['vn'] = _vox_new
-aliases['vr?'] = 'vox rm'
-aliases['vx'] = 'vox exit'
+# Disable default CTRL-S behavior
+stty -ixon

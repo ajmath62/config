@@ -55,4 +55,4 @@ def subprocess_run(*args, **kwargs):
         return subprocess.run(*args, **kwargs)
 
 
-PRINT_STATEMENTS = ('print', 'puts', 'console')
+PRINT_STATEMENTS = ('...', 'console', 'print', 'puts', 'window')
