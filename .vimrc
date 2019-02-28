@@ -28,30 +28,93 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-" Set .ts files to have filetype typescript (used for syntax highlighting)
-au BufRead,BufNewFile *.ts setfiletype=typescript
+" Set <Leader>
+let mapleader = '@'
+let maplocalleader = '\'
+
+" Meta
+nnoremap <Leader>f :tabnew ~/.vimrc<CR>
+nnoremap <Leader>c :source ~/.vimrc<CR>
+
+" Save with Control-S
+nnoremap <C-S> :write<CR>
+inoremap <C-S> <C-O>:write<CR>
 
 " Always use spaces instead of tabs
 set expandtab
-map <C-Space> :set et!<CR>
-map <C-@> <C-Space>
+set tabstop=2 shiftwidth=2
+nnoremap <Leader><Space> :set expandtab!<CR>
 
+" Language-specific changes
 " Use 4 spaces for Python and 2 spaces for everything else
-au FileType * set tabstop=2 shiftwidth=2
-au FileType python set tabstop=4 shiftwidth=4
+augroup python
+  autocmd!
+  autocmd FileType python setlocal foldmethod=indent shiftwidth=4 tabstop=4
+augroup END
+augroup vimscript
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+  " Fold on page load
+  autocmd FileType vim normal! zM
+augroup END
 
 " Switching tabs
-map <C-T>h :tabp<CR>
-map <C-T>j :tabl<CR>
-map <C-T>k :tabr<CR>
-map <C-T>l :tabn<CR>
-map <C-T>n :tabnew 
-map <C-T>q :tabc<CR>
+nnoremap <Leader>th :tabp<CR>
+nnoremap <Leader>tj :tabl<CR>
+nnoremap <Leader>tk :tabr<CR>
+nnoremap <Leader>tl :tabn<CR>
+nnoremap <Leader>tn :tabnew 
+nnoremap <Leader>tq :tabc<CR>
 
 " Line numbering
-set nu
-map <C-N>n :set nu!<CR>
-map <C-N>r :set rnu!<CR>
+set number
+nnoremap <Leader>nn :set number!<CR>
+nnoremap <Leader>nr :set relativenumber!<CR>
+
+" Date insertion
+" YYYY-MM-DD
+nnoremap <Leader>dd "=strftime('%F')<CR>P
+" Accept a format string from the user
+nnoremap <expr> <Leader>du '"=strftime("' . input('') . '")<CR>P'
+" YYYY
+nnoremap <Leader>dy "=strftime('%Y')<CR>P
+
+" Show commands as they're typed
+set showcmd
+" Show matching brackets
+set showmatch
 
 " Color modifications
 highlight Comment ctermfg=green
+
+" Search settings
+" Search case-insensitively
+" Use \C to turn off for a single search
+set ignorecase
+" Highlight searches as they're typed
+set incsearch
+
+" Always leave a little bit of space at the edges of the screen
+set scrolloff=5
+
+" Set .ts files to have filetype typescript (used for syntax highlighting)
+augroup typescript
+  autocmd!
+  autocmd BufRead,BufNewFile *.ts set filetype=typescript
+augroup END
+
+" Set .xsh files to have filetype python (it's approximately correct)
+augroup xonsh
+  autocmd!
+  autocmd BufRead,BufNewFile *.xsh set filetype=python
+augroup END
+
+" Git mappings
+augroup git
+  autocmd!
+  " xx: Clear the whole file, save and quit. Aborts a git operation.
+  autocmd FileType gitcommit,gitrebase nnoremap <buffer> <LocalLeader>xx ggdG:wq<CR>
+  " a<l>: Replace the first word of the current line with letter <l>. Useful
+  " for switching a rebase action.
+  autocmd FileType gitrebase nnoremap <buffer> <expr> <LocalLeader>a 'cw' . nr2char(getchar()) . '<Esc>'
+augroup END
