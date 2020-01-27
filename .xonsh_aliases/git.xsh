@@ -1,19 +1,21 @@
+import os
+
 def _git_diff_add():
-    status = $(git status --porcelain=v1)
-    regex = r'^( M|UU|\?\?) (.*)$'
+    status = '\n'.join($(git status -z).split('\x00'))
+    regex = r'^(.M|.U|.D|\?\?) (.*)$'
     file_list = re.findall(regex, status, re.MULTILINE)
     
     all_done = False
     for match_type, file in file_list:
         clear
         if match_type == '??':
-            # Untracked file
-            $[bat @(file)]
+            # Untracked file, default to catting it
+            yn = 'c'
         else:
-            $[git df -- @(file)]
+            # Tracked file, show the word diff
+            yn = 'w'
         done = False
         while not done:
-            yn = input(f'Git add {file}? (y/n/q/c/l/w/e/p) ').lower()
             if yn.startswith('y'):
                 $[git add @(file)]
                 done = True
@@ -24,7 +26,11 @@ def _git_diff_add():
                 all_done = True
             elif yn.startswith('c'):
                 clear
-                $[bat @(file)]
+                if file.endswith('.js') and os.path.exists('node_modules/react'):
+                    # Javascript files in a React project are most likely JSX
+                    $[bat @(file) --language=jsx]
+                else:
+                    $[bat @(file)]
             elif yn.startswith('l'):
                 clear
                 $[git diff -- @(file)]
@@ -41,6 +47,8 @@ def _git_diff_add():
                 $[git df -- @(file)]
             else:
                 print('Please answer yes, no, quit, cat, line, word, edit or patch.')
+            if not done:
+                yn = input(f'Git add {file}? (y/n/q/c/l/w/e/p) ').lower()
         if all_done:
             break
     clear
@@ -70,7 +78,7 @@ def _git_last_branch_op(op, args):
 
 def _git_log_hours(args):
     start_date = args[0] if args else 'midnight'
-    $[git log --author=ajmath62@gmail.com --all --reverse '--pretty=%ad: %s' '--date=format:%a %h %d %I:%M%P' --since @(start_date)]
+    $[git log --author=ajmath62@gmail.com --all --reverse '--pretty=%cd (%ad): %s' '--date=format:%a %h %d %I:%M%P' --since @(start_date)]
 
 def _git_status_cow():
     return $(git status | cowsay -n -f @(_random_cow()))
@@ -116,6 +124,8 @@ aliases['gcam'] = lambda: ![git add */migrations err> /dev/null] or ![git add */
 aliases['gcap'] = 'git add --patch'  # git add by chunks of file
 aliases['gcc'] = 'git commit '
 aliases['gcca'] = 'git commit --amend '
+aliases['gccf'] = 'git commit --edit --fixup '  # requires an argument
+aliases['gccs'] = 'git commit --edit --squash '  # requires an argument
 aliases['gch'] = 'git reset HEAD'
 aliases['gch?'] = 'git checkout -- '
 aliases['gcm'] = 'git merge'
@@ -156,28 +166,30 @@ aliases['gew'] = 'git rebase --show-current-patch '
 # File operations (gf)
 aliases['gfc'] = lambda: $[git ls-files | wc]
 aliases['gfm'] = 'git mv '
-aliases['gfl'] = lambda: $[git ls-files | less -FRXm]
+aliases['gfl'] = lambda args: $[git ls-files @(args) | less -FRXm]
 aliases['gfr?'] = 'git rm '
 # Log (gl)
 aliases['glc'] = lambda: $[git log --pretty=%H | head -n +1]
 aliases['glf'] = 'git reflog '
+aliases['glg'] = 'git log --all --graph --oneline --color=always '
 aliases['glh'] = _git_log_hours
 aliases['gll'] = 'git log '
 aliases['glo'] = _git_last_branch
-aliases['glp'] = 'git log --patch '
+aliases['glp'] = 'git log --patch --word-diff=color '
+aliases['glpl'] = 'git log --patch '
 aliases['gls'] = 'git log --stat '
 # Repository (gp)
 aliases['gpa'] = 'git remote add '
 aliases['gpd'] = 'git pull'
 aliases['gpe'] = 'git remote set-url '
-aliases['gpf'] = 'git fetch '
-aliases['gpfp'] = 'git fetch --prune '
+aliases['gpf'] = 'git fetch --prune '
+aliases['gpfp'] = 'git fetch '  # no prune
 aliases['gpl'] = 'git remote --verbose'
 aliases['gpm'] = lambda: $[git merge @('origin/' + $PROMPT_FIELDS['curr_branch']())]
 aliases['gpn'] = 'git clone'
 aliases['gpr'] = 'git pull --rebase'
 aliases['gpu'] = 'git push'
-aliases['gpun'] = lambda: $[git push -u origin @($PROMPT_FIELDS['curr_branch']())]
+aliases['gpun'] = lambda args: $[git push -u origin @($PROMPT_FIELDS['curr_branch']()) @(args)]
 aliases['gput'] = 'git push --tags '
 # Stash (gs)
 aliases['gsl'] = 'git stash list'

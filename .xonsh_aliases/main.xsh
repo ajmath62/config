@@ -1,4 +1,5 @@
 # Common
+aliases['bd'] = lambda args: ![date -d @(f'@{args[0]}') @(args[1:])]
 aliases['be'] = 'echo'
 aliases['bs'] = 'sudo'
 aliases['bs?'] = 'sudo su'
@@ -11,7 +12,8 @@ aliases['bwp'] = 'which python'
 # File manipulation
 aliases['bk'] = 'ln -s'
 aliases['bkh'] = 'ln'
-aliases['bm'] = 'mv'
+aliases['bm'] = 'mv --interactive '
+aliases['bmv'] = 'mv --interactive --verbose'
 aliases['br?'] = 'rm -i'
 aliases['br??'] = 'rm -ri'
 aliases['br???'] = 'rm -rI'  # non-interactive
@@ -25,9 +27,10 @@ aliases['bcz'] = 'cd ~/zagaran'
 aliases['bl'] = 'ls --color '
 aliases['bla'] = 'ls --color -A '
 aliases['bll'] = 'ls --color -Alh '
+aliases['blr'] = 'ls -R '
 
 # Installing (ba)
-aliases['baa'] = 'sudo apt-get autoremove'
+aliases['baa'] = 'sudo add-apt-repository '
 aliases['bai'] = 'sudo apt-get install '
 aliases['bar'] = 'sudo apt-get autoremove '
 aliases['bar?'] = 'sudo apt-get remove '
@@ -69,23 +72,39 @@ aliases['fur'] = 'unalias -a && source ~/.xonshrc'
 
 # Task PID
 def _find_task_pid(args):
-  return re.search(f'(?m)^ ?(\d+) .*{args[0]}', $(ps -e)).group(1)
+    regex = args[0]
+    # Get a list of PIDs
+    return re.findall(fr'^ *(\d+) .*{regex}', $(ps -e --format pid,args), re.MULTILINE)
 
 def _kill_task(args):
-  $[kill @(_find_task_pid(args))]
-
+    for pid in _find_task_pid(args):
+        ![ps -f --quick-pid @(pid)]
+        yn = input('Kill? ').lower()
+        if yn.startswith('y'):
+            ![kill @(pid)]
+            return
+        elif yn == '9':
+            # Super-kill!
+            ![kill -9 @(pid)]
+            return
+        else:
+            continue
+    else:
+        print('No tasks found')
 
 # Searching (s)
-aliases['sa'] = 'ag --ignore=node_modules --ignore=*.json --ignore=*.min.js* --ignore=*.cache --ignore=development.log --pager="less -FRXm" --column -i'
+aliases['sa'] = 'ag "--pager=less -FRXm" --column -i --ignore=*.min.* --ignore=*.map'
+aliases['saa'] = 'sa "[\x80-\U0010ffff]"'  # non-ASCII characters
 aliases['sap'] = 'sa -G .py$'
 aliases['sapm'] = 'sap --ignore=*/migrations/* '
-aliases['sar'] = 'ag'
+aliases['sar'] = 'ag'  # raw silversearcher, no ignores or anything
 aliases['sas'] = 'sa -s'  # case-sensitive
-aliases['sau'] = 'sa -u '  # all
-aliases['sav'] = 'sa --ignore=vendor --ignore=lib --ignore=packages' 
+aliases['sau'] = 'sa -u '  # all, including things in .gitignore
+aliases['sav'] = 'sa --ignore=node_modules --ignore=vendor --ignore=lib --ignore=packages' 
 aliases['sf'] = lambda args: ![find @($(pwd).rstrip('\n')) -name @(args[0])]  # find file containing name
 aliases['sfr'] = lambda args: ![find @($(pwd).rstrip('\n')) -regex @(args[0])]  # find file exactly matching regex
-aliases['sg'] = 'grep -in'  # not case-sensitive, display line number
+aliases['sg'] = 'grep -in --color=always'  # not case-sensitive, display line number
+aliases['sgi'] = 'grep -n --color=always'
 aliases['sr'] = _find_task_pid
 aliases['srk?'] = _kill_task
 

@@ -36,7 +36,8 @@ def _gitstatus_with_hash():
     else:
         # Add the commit hash at the end of the branch name
         end_of_name_regex = '(\\||' + $XONSH_GITSTATUS_AHEAD + '|' + $XONSH_GITSTATUS_BEHIND + ')'
-        return re.sub(end_of_name_regex, f': {commit_hash}{{NO_COLOR}}\\1', git_status, 1)
+        # For some reason, f'{{NO_COLOR}}' doesn't work with current xonsh/python version (2019-04-18, Ubuntu 19.04)
+        return re.sub(end_of_name_regex, f': {commit_hash}' + '{NO_COLOR}\\1', git_status, 1)
 $PROMPT_FIELDS['gitstatus_hash'] = _gitstatus_with_hash
 
 # Git status settings
@@ -86,6 +87,12 @@ aliases['unalias'] = _bash_unalias
 # Virtual environments with Vox
 xontrib load vox
 $VIRTUALENV_HOME = $HOME + '/.vox'
+
+# Python configuration
+# Set ipdb as the default python debugger
+$PYTHONBREAKPOINT = 'ipdb.set_trace'
+# Warnings behavior
+$PYTHONWARNINGS = 'default,ignore:unclosed <socket:ResourceWarning,ignore:unclosed <ssl.SSLSocket:ResourceWarning'
 
 # Load aliases
 source ~/.xonsh_aliases/.init.xsh
